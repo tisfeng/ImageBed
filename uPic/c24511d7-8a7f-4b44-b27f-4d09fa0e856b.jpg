@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<!--[if IE 6]><html class="ie lt-ie8"><![endif]-->
+<!--[if IE 7]><html class="ie lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="ie ie8"><![endif]-->
+<!--[if IE 9]><html class="ie ie9"><![endif]-->
+<!--[if !IE]><!--> <html> <!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+
+  <!-- Start of Baidu Transcode -->
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="MobileOptimized" content="width"/>
+  <meta name="HandheldFriendly" content="true"/>
+  <meta name="mobile-agent" content="format=html5;url=https://www.jianshu.com/p/ac45d99cf912">
+  <!-- End of Baidu Transcode -->
+
+    <meta name="description"  content="前言 iOS开发中，用来显示一个html页、H5页，经常会用的一个控件是WebView。说到WebView，你知道多少呢？是简单的展示，还是要和OC交互实现比较复杂的功能呢？本文将为您介绍iOS中的WebView，并且由浅到深，一步步带你了解并掌握WebView的用法，JavaScript与Objective的交互，以及Cookie的管理、js的调试等。 文章因涉及到的内容较多，因此拆分成以...">
+
+  <meta name="360-site-verification" content="604a14b53c6b871206001285921e81d8" />
+  <meta property="wb:webmaster" content="294ec9de89e7fadb" />
+  <meta property="qc:admins" content="104102651453316562112116375" />
+  <meta property="qc:admins" content="11635613706305617" />
+  <meta property="qc:admins" content="1163561616621163056375" />
+  <meta name="google-site-verification" content="cV4-qkUJZR6gmFeajx_UyPe47GW9vY6cnCrYtCHYNh4" />
+  <meta name="google-site-verification" content="HF7lfF8YEGs1qtCE-kPml8Z469e2RHhGajy6JPVy5XI" />
+  <meta http-equiv="mobile-agent" content="format=html5; url=https://www.jianshu.com/p/ac45d99cf912">
+
+  <!-- Apple -->
+  <meta name="apple-mobile-web-app-title" content="简书">
+
+    <!--  Meta for Smart App Banner -->
+  <meta name="apple-itunes-app" content="app-id=888237539, app-argument=jianshu://notes/12223730">
+  <!-- End -->
+
+  <!--  Meta for Twitter Card -->
+  <meta content="summary" property="twitter:card">
+  <meta content="@jianshucom" property="twitter:site">
+  <meta content="iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管理看我就够（上）" property="twitter:title">
+  <meta content="前言 iOS开发中，用来显示一个html页、H5页，经常会用的一个控件是WebView。说到WebView，你知道多少呢？是简单的展示，还是要和OC交互实现比较复杂的功能呢？..." property="twitter:description">
+  <meta content="https://www.jianshu.com/p/ac45d99cf912" property="twitter:url">
+  <!-- End -->
+
+  <!--  Meta for OpenGraph -->
+  <meta property="fb:app_id" content="865829053512461">
+  <meta property="og:site_name" content="简书">
+  <meta property="og:title" content="iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管理看我就够（上）">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.jianshu.com/p/ac45d99cf912">
+  <meta property="og:description" content="前言 iOS开发中，用来显示一个html页、H5页，经常会用的一个控件是WebView。说到WebView，你知道多少呢？是简单的展示，还是要和OC交互实现比较复杂的功能呢？本文将为您介绍iOS...">
+  <!-- End -->
+
+  <!--  Meta for Facebook Applinks -->
+  <meta property="al:ios:url" content="jianshu://notes/12223730" />
+  <meta property="al:ios:app_store_id" content="888237539" />
+  <meta property="al:ios:app_name" content="简书" />
+
+  <meta property="al:android:url" content="jianshu://notes/12223730" />
+  <meta property="al:android:package" content="com.jianshu.haruki" />
+  <meta property="al:android:app_name" content="简书" />
+  <!-- End -->
+
+
+    <title>iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管... - 简书</title>
+
+  <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="taN5fwaPOmRXbWbXZFBLo4x2TtHV+vfz6J1hlkm20UMqr1EfVKFSpoZPcmEPS7Hw/xSJJVdaJaMsl7LyaSGGcg==" />
+
+  <link rel="stylesheet" media="all" href="//cdn2.jianshu.io/assets/web-bfc15fabb3b20492f7d4.css" />
+  
+  <link rel="stylesheet" media="all" href="//cdn2.jianshu.io/assets/web/pages/notes/show/entry-00e12f5a757a30f65da3.css" />
+
+  <link href="//cdn2.jianshu.io/assets/favicons/favicon-e743bfb1821442341c3ab15bdbe804f7ad97676bd07a770ccc9483473aa76f06.ico" rel="shortcut icon" type="image/x-icon">
+      <link rel="apple-touch-icon-precomposed" href="//cdn2.jianshu.io/assets/apple-touch-icons/57-a6f1f1ee62ace44f6dc2f6a08575abd3c3b163288881c78dd8d75247682a4b27.png" sizes="57x57" />
+      <link rel="apple-touch-icon-precomposed" href="//cdn2.jianshu.io/assets/apple-touch-icons/72-fb9834bcfce738fd7b9c5e31363e79443e09a81a8e931170b58bc815387c1562.png" sizes="72x72" />
+      <link rel="apple-touch-icon-precomposed" href="//cdn2.jianshu.io/assets/apple-touch-icons/76-49d88e539ff2489475d603994988d871219141ecaa0b1a7a9a1914f4fe3182d6.png" sizes="76x76" />
+      <link rel="apple-touch-icon-precomposed" href="//cdn2.jianshu.io/assets/apple-touch-icons/114-24252fe693524ed3a9d0905e49bff3cbd0228f25a320aa09053c2ebb4955de97.png" sizes="114x114" />
+      <link rel="apple-touch-icon-precomposed" href="//cdn2.jianshu.io/assets/apple-touch-icons/120-1bb7371f5e87f93ce780a5f1a05ff1b176828ee0d1d130e768575918a2e05834.png" sizes="120x120" />
+      <link rel="apple-touch-icon-precomposed" href="//cdn2.jianshu.io/assets/apple-touch-icons/152-bf209460fc1c17bfd3e2b84c8e758bc11ca3e570fd411c3bbd84149b97453b99.png" sizes="152x152" />
+
+  <!-- Start of 访问统计 -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?0c0e9d9b1e7d617b3e6842e85b9fb068";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+  <!-- End of 访问统计 -->
+</head>
+
+  <!-- 只给10%的用户添加代码 -->
+  <body lang="zh-CN" class="reader-black-font">
+    <!-- 全局顶部导航栏 -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="width-limit">
+    <!-- 左上方 Logo -->
+    <a class="logo" href="/"><img src="//cdn2.jianshu.io/assets/web/nav-logo-4c7bbafe27adc892f3046e6978459bac.png" alt="Nav logo" /></a>
+
+    <!-- 右上角 -->
+      <!-- 未登录显示登录/注册/写文章 -->
+      <a class="btn write-btn" target="_blank" href="/writer#/">
+        <i class="iconfont ic-write"></i>写文章
+</a>      <a class="btn sign-up" id="sign_up" href="/sign_up">注册</a>
+      <a class="btn log-in" id="sign_in" href="/sign_in">登录</a>
+
+    <!-- 如果用户登录，显示下拉菜单 -->
+
+    <div id="view-mode-ctrl">
+    </div>
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu" aria-expanded="false">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="menu">
+        <ul class="nav navbar-nav">
+            <li class="tab ">
+              <a href="/">
+                <span class="menu-text">首页</span><i class="iconfont ic-navigation-discover menu-icon"></i>
+</a>            </li>
+            <li class="tab ">
+              <a id="web-nav-app-download-btn" class="app-download-btn" href="/apps?utm_medium=desktop&amp;utm_source=navbar-apps"><span class="menu-text">下载App</span><i class="iconfont ic-navigation-download menu-icon"></i></a>
+            </li>
+          <li class="search">
+            <form target="_blank" action="/search" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="&#x2713;" />
+              <input type="text" name="q" id="q" value="" autocomplete="off" placeholder="搜索" class="search-input" />
+              <a class="search-btn" href="javascript:void(null)"><i class="iconfont ic-search"></i></a>
+</form>          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+    
+<div class="note">
+  <div id="note-fixed-ad-container">
+      <a target="_blank" href="/apps/redirect?utm_source=side-banner-click" id="web-note-ad-fixed"><span class="close">&times;</span></a>
+    <div id="fixed-ad-container">
+      <span id="youdao-fixed-ad" class="ad-badge">广告</span>
+    </div>
+  </div>
+  <div class="post">
+    <div class="article">
+        <h1 class="title">iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管理看我就够（上）</h1>
+
+        <!-- 作者区域 -->
+        <div class="author">
+          <a class="avatar" href="/u/9f088cde1295">
+            <img src="//upload.jianshu.io/users/upload_avatars/5912049/be00e47e-4acd-4837-8a29-df3fa3cf7ca7?imageMogr2/auto-orient/strip|imageView2/1/w/96/h/96" alt="96" />
+</a>          <div class="info">
+            <span class="name"><a href="/u/9f088cde1295">Dark_Angel</a></span>
+            <!-- 关注用户按钮 -->
+            <div props-data-classes="user-follow-button-header" data-author-follow-button></div>
+            <!-- 文章数据信息 -->
+            <div class="meta">
+              <!-- 如果文章更新时间大于发布时间，那么使用 tooltip 显示更新时间 -->
+                <span class="publish-time" data-toggle="tooltip" data-placement="bottom" title="最后编辑于 2017.12.07 03:45">2017.05.09 18:55*</span>
+              <span class="wordage">字数 3293</span>
+            </div>
+          </div>
+          <!-- 如果是当前作者，加入编辑按钮 -->
+        </div>
+
+
+        <!-- 文章内容 -->
+        <div data-note-content class="show-content">
+          <div class="show-content-free">
+            <div class="image-package">
+<div class="image-container" style="max-width: 700px; max-height: 680px;">
+<div class="image-container-fill" style="padding-bottom: 66.41%;"></div>
+<div class="image-view" data-width="1024" data-height="680"><img data-original-src="//upload-images.jianshu.io/upload_images/5912049-c4523972099d2b5c.jpg" data-original-width="1024" data-original-height="680" data-original-format="image/jpeg" data-original-filesize="156197"></div>
+</div>
+<div class="image-caption"></div>
+</div>
+<h1>前言</h1>
+<p>iOS开发中，用来显示一个html页、H5页，经常会用的一个控件是WebView。说到WebView，你知道多少呢？是简单的展示，还是要和OC交互实现比较复杂的功能呢？本文将为您介绍iOS中的WebView，并且由浅到深，一步步带你了解并掌握WebView的用法，JavaScript与Objective的交互，以及Cookie的管理、js的调试等。</p>
+<p>文章因涉及到的内容较多，因此拆分成以下几部分：</p>
+<ul>
+<li>iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管理看我就够（上）</li>
+<li>
+<a href="https://www.jianshu.com/p/870dba42ec15" target="_blank">iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管理看我就够（中）</a>（已发布😊）</li>
+<li>
+<a href="https://www.jianshu.com/p/52668d5b2e68" target="_blank">iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管理看我就够（下）</a>（已发布😊）</li>
+</ul>
+<p>关于文中提到的一些内容，这里我准备了个<a href="https://link.jianshu.com?t=https://github.com/DarkAngel7/Demos-WebViewDemo" target="_blank" rel="nofollow">Demo</a>，有需要的小伙伴可以下载。</p>
+<h1>本文目录</h1>
+<ul>
+<li>前言</li>
+<li>UIWebView
+<ul>
+<li>UIWebView基本用法</li>
+<li>UIWebView中JavaScript与Objective的交互
+<ul>
+<li>UIWebView OC调用JS
+<ol>
+<li>stringByEvaluatingJavaScriptFromString:</li>
+<li>JavaScriptCore（iOS 7.0 +）</li>
+</ol>
+</li>
+<li>UIWebView JS调用OC
+<ol>
+<li>Custom URL Scheme（拦截URL）</li>
+<li>JavaScriptCore（iOS 7.0 +）</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>UIWebView的Cookie管理
+<ul>
+<li>Cookie简介</li>
+<li>Cookie管理</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>未完待续</li>
+</ul>
+<h1>UIWebView</h1>
+<h2>UIWebView基本用法</h2>
+<p>首先要介绍的就是我们的老朋友<code>UIWebView</code>。相信对大多数小伙伴儿而言，<code>UIWebView</code>和<code>UILabel</code>一样，都是最早接触的控件了，其实<code>UIWebView</code>用法比较简单（功能基本能满足需求），简单的创建，并且调用</p>
+<pre><code class="objective-c">- (void)loadRequest:(NSURLRequest *)request;
+- (void)loadHTMLString:(NSString *)string baseURL:(nullable NSURL *)baseURL;
+- (void)loadData:(NSData *)data MIMEType:(NSString *)MIMEType textEncodingName:(NSString *)textEncodingName baseURL:(NSURL *)baseURL;
+</code></pre>
+<p>这些方法，加载就可以了。<br>
+当然，如果需要监听页面加载的结果，或者需要判断是否允许打开某个URL，那需要设置<code>UIWebView</code>的<code>delegate</code>，代理只需要遵循<code>&lt;UIWebViewDelegate&gt;</code>协议，并且在代理中实现下面的这些可选方法就可以：</p>
+<pre><code class="objective-c">__TVOS_PROHIBITED @protocol UIWebViewDelegate &lt;NSObject&gt;
+
+@optional
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
+- (void)webViewDidStartLoad:(UIWebView *)webView;
+- (void)webViewDidFinishLoad:(UIWebView *)webView;
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(nullable NSError *)error;
+
+@end
+</code></pre>
+<h2>UIWebView中JavaScript与Objective的交互</h2>
+<p>这里不详细讨论一些很好的第三方实现，比如<a href="https://link.jianshu.com?t=https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="nofollow">WebViewJavascriptBridge</a>，单纯的讲讲native端JS与OC的交互实现方式，读完了下面的部分，相信你也会实现一个简单的<code>bridge</code>了。</p>
+<h3>UIWebView OC调用JS</h3>
+<h4>1. stringByEvaluatingJavaScriptFromString:</h4>
+<p>最常用的方法，很简单，只要调用<code>- (nullable NSString *)stringByEvaluatingJavaScriptFromString:(NSString *)script;</code>就可以了，如：</p>
+<pre><code class="objective-c">    self.navigationItem.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+</code></pre>
+<p>虽然比较方便，但是缺点也有：</p>
+<ol>
+<li>该方法不能判断调用了一个js方法之后，是否发生了错误。当错误发生时，返回值为nil，而当调用一个方法本身没有返回值时，返回值也为nil，所以无法判断是否调用成功了。</li>
+<li>返回值类型为<code>nullable NSString *</code>，就意味着当调用的js方法有返回值时，都以字符串返回，不够灵活。当返回值是一个js的Array时，还需要解析字符串，比较麻烦。</li>
+</ol>
+<p>对于上述缺点，可以通过使用JavaScriptCore（iOS 7.0 +）来解决。</p>
+<h4>2. JavaScriptCore（iOS 7.0 +）</h4>
+<p>想必大家不会陌生吧，前些日子弄的沸沸扬扬的<code>JSPatch</code>被禁事件中，最核心的就是它了。因为<code>JavaScriptCore</code>的JS到OC的映射，可以替换各种js方法成oc方法，所以其<strong>动态性（配合runtime的不安全性）</strong>也就成为了<code>JSPatch</code>被<strong>Apple</strong>禁掉的最主要原因。这里讲下<code>UIWebView</code>通过<code>JavaScriptCore</code>来实现OC-&gt;JS。</p>
+<p>其实WebKit都有一个内嵌的js环境，一般我们在页面加载完成之后，获取js上下文，然后通过<code>JSContext</code>的<code>evaluateScript:</code>方法来获取返回值。因为该方法得到的是一个<code>JSValue</code>对象，所以支持JavaScript的Array、Number、String、对象等数据类型。</p>
+<pre><code class="objective-c">- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    //更新标题，这是上面的讲过的方法
+    //self.navigationItem.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+    
+    //获取该UIWebView的javascript上下文
+    JSContext *jsContext = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    
+    //这也是一种获取标题的方法。
+    JSValue *value = [self.jsContext evaluateScript:@"document.title"];
+    //更新标题
+    self.navigationItem.title = value.toString;
+}
+</code></pre>
+<p>该方法解决了<code>stringByEvaluatingJavaScriptFromString:</code>返回值只是<code>NSString</code>的问题。</p>
+<p>那么如果我执行了一个不存在的方法，比如</p>
+<pre><code class="objective-c">[self.jsContext evaluateScript:@"document.titlexxxx"];
+</code></pre>
+<p>那么必然会报错，报错了，可以通过<code>@property (copy) void(^exceptionHandler)(JSContext *context, JSValue *exception);</code>，设置该block来获取异常。</p>
+<pre><code class="objective-c">//在调用前，设置异常回调
+[self.jsContext setExceptionHandler:^(JSContext *context, JSValue *exception){
+        NSLog(@"%@", exception);
+}];
+//执行方法
+JSValue *value = [self.jsContext evaluateScript:@"document.titlexxxx"];
+</code></pre>
+<p>该方法，也很好的解决了<code>stringByEvaluatingJavaScriptFromString:</code>调用js方法后，出现错误却捕获不到的缺点。</p>
+<h3>UIWebView JS调用OC</h3>
+<h4>1. Custom URL Scheme（拦截URL）</h4>
+<p>比如<code>darkangel://</code>。方法是在html或者js中，点击某个按钮触发事件时，跳转到自定义URL Scheme构成的链接，而Objective-C中捕获该链接，从中解析必要的参数，实现JS到OC的一次交互。比如页面中一个a标签，链接如下：</p>
+<pre><code class="html">&lt;a href="darkangel://smsLogin?username=12323123&amp;code=892845"&gt;短信验证登录&lt;/a&gt;
+</code></pre>
+<p>而在Objective-C中，只要遵循了<code>UIWebViewDelegate</code>协议，那么每次打开一个链接之前，都会触发方法</p>
+<pre><code class="objective-c">- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType；
+</code></pre>
+<p>在该方法中，捕获该链接，并且返回NO（<strong>阻止本次跳转</strong>），从而执行对应的OC方法。</p>
+<pre><code class="objective-c">- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    //标准的URL包含scheme、host、port、path、query、fragment等
+    NSURL *URL = request.URL;    
+    if ([URL.scheme isEqualToString:@"darkangel"]) {
+        if ([URL.host isEqualToString:@"smsLogin"]) {
+            NSLog(@"短信验证码登录，参数为 %@", URL.query);
+            return NO;
+        }
+    }
+    return YES;
+}
+</code></pre>
+<p>当用户点击<strong>短信验证登录</strong>时，控制台会输出<code>短信验证码登录，参数为 username=12323123&amp;code=892845</code>。参数可以是一个json格式并且URLEncode过的字符串，这样就可以实现复杂参数的传递（比如<a href="https://link.jianshu.com?t=https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="nofollow">WebViewJavascriptBridge</a>）。</p>
+<p><strong>优点</strong>：泛用性强，可以配合h5实现页面动态化。比如页面中一个活动链接到活动详情页，当native尚未开发完毕时，链接可以是一个h5链接，等到native开发完毕时，可以通过该方法跳转到native页面，实现页面动态化。且该方案适用于Android和iOS，泛用性很强。</p>
+<p><strong>缺点</strong>：无法直接获取本次交互的返回值，比较适合单向传参，且不关心回调的情景，比如h5页面跳转到native页面等。</p>
+<p>其实，<a href="https://link.jianshu.com?t=https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="nofollow">WebViewJavascriptBridge</a>使用的方案就是<strong>拦截URL</strong>，为了解决无法直接获取返回值的缺点，它采用了将一个名为<code>callback</code>的<code>function</code>作为参数，通过一些封装，传递到OC（<strong>js-&gt;oc</strong> 传递参数和callbackId），然后在OC端执行完毕，再通过<code>block</code>来回调callback（<strong>oc-&gt;js</strong>，传递返回值参数），实现异步获取返回值，比如在js端调用</p>
+<pre><code class="javascript">//JS调用OC的分享方法（当然需要OC提前注册）share为方法名，shareData为参数，后面的为回调function
+WebViewJavascriptBridge.callHandler('share', shareData, function(response) {
+   //OC端通过block回调分享成功或者失败的结果
+   alert(response);   
+});
+</code></pre>
+<p>具体的可以看下它的源码，还是很值得学习的。</p>
+<h4>2. JavaScriptCore（iOS 7.0 +）</h4>
+<p>除了<strong>拦截URL</strong>的方法，还可以利用上面提到的<code>JavaScriptCore</code>。它十分强大，强大在哪里呢？下面我们来一探究竟。</p>
+<p>当然，还是需要在页面加载完成时，先获取js上下文。获取到之后，我们就可以进行强大的方法映射了。</p>
+<p>比如js中我定义了一个分享的方法</p>
+<pre><code class="javascript">function share(title, imgUrl, link) {
+     //这里需要OC实现
+}
+</code></pre>
+<p>在OC中实现如下</p>
+<pre><code class="objective-c">- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    //将js的function映射到OC的方法
+    [self convertJSFunctionsToOCMethods];
+}
+
+- (void)convertJSFunctionsToOCMethods
+{
+    //获取该UIWebview的javascript上下文
+    //self持有jsContext
+    //@property (nonatomic, strong) JSContext *jsContext;
+    self.jsContext = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    
+    //js调用oc
+    //其中share就是js的方法名称，赋给是一个block 里面是oc代码
+    //此方法最终将打印出所有接收到的参数，js参数是不固定的
+    self.jsContext[@"share"] = ^() {
+        NSArray *args = [JSContext currentArguments];//获取到share里的所有参数
+        //args中的元素是JSValue，需要转成OC的对象
+        NSMutableArray *messages = [NSMutableArray array];
+        for (JSValue *obj in args) {
+            [messages addObject:[obj toObject]];
+        }
+        NSLog(@"点击分享js传回的参数：\n%@", messages);
+    };
+}
+</code></pre>
+<p>在html或者js的某处，点击a标签调用这个share方法，并传参，如</p>
+<pre><code class="html">&lt;a href="javascript:void(0);" class="sharebtn" onclick="share('分享标题', 'http://cc.cocimg.com/api/uploads/170425/b2d6e7ea5b3172e6c39120b7bfd662fb.jpg', location.href)"&gt;分享活动，领30元红包&lt;/a&gt;
+</code></pre>
+<p>此时，如果用户点击了<strong>&lt;u&gt;分享活动，领30元红包&lt;/u&gt;</strong>这个标签，那么在控制台会打印出所有参数</p><div class="image-package">
+<div class="image-container" style="max-width: 700px; max-height: 630px;">
+<div class="image-container-fill" style="padding-bottom: 37.59%;"></div>
+<div class="image-view" data-width="1676" data-height="630"><img data-original-src="//upload-images.jianshu.io/upload_images/5912049-65c82801aa0b25ea.jpg" data-original-width="1676" data-original-height="630" data-original-format="image/jpeg" data-original-filesize="274487"></div>
+</div>
+<div class="image-caption"></div>
+</div><p></p>
+<p>上面的代码实现了OC方法替换JS实现。它十分灵活，主要依赖这些Api。</p>
+<pre><code class="objective-c">@interface JSContext (SubscriptSupport)
+/*!
+@method
+@abstract Get a particular property on the global object.
+@result The JSValue for the global object's property.
+*/
+- (JSValue *)objectForKeyedSubscript:(id)key;
+/*!
+@method
+@abstract Set a particular property on the global object.
+*/
+- (void)setObject:(id)object forKeyedSubscript:(NSObject &lt;NSCopying&gt; *)key;
+</code></pre>
+<p><code>self.jsContext[@"yourMethodName"] = your block;</code>这样写不仅可以在有<code>yourMethodName</code>方法时替换该JS方法为OC实现，还会在该方法没有时，添加方法。简而言之，<strong>有则替换，无则添加</strong>。</p>
+<p>那如果我想写一个有两个参数，一个返回值的js方法，oc应该怎么替换呢？</p>
+<p>js中</p>
+<pre><code class="javascript">//该方法传入两个整数，求和，并返回结果
+function testAddMethod(a, b) {
+    //需要OC实现a+b，并返回
+    return a + b;
+}
+//js调用
+console.log(testAddMethod(1, 5));   //output  6
+</code></pre>
+<p>oc直接替换该方法</p>
+<pre><code class="objective-c">self.jsContext[@"testAddMethod"] = ^NSInteger(NSInteger a, NSInteger b) {
+      return a + b;
+};
+</code></pre>
+<p>那么当在js调用</p>
+<pre><code class="javascript">//js调用
+console.log(testAddMethod(1, 5));   //output  6， 方法为 a + b
+</code></pre>
+<p>如果oc替换该方法为两数相乘</p>
+<pre><code class="objective-c">self.jsContext[@"testAddMethod"] = ^NSInteger(NSInteger a, NSInteger b) {
+      return a * b;
+};
+</code></pre>
+<p>再次调用js</p>
+<pre><code class="javascript">console.log(testAddMethod(1, 5));   //output  5，该方法变为了 a * b。
+</code></pre>
+<p>举一反三，调用方法原实现，并且在原结果上乘以10。</p>
+<pre><code class="objective-c">//调用方法的本来实现，给原结果乘以10
+JSValue *value = self.jsContext[@"testAddMethod"];
+self.jsContext[@"testAddMethod"] = ^NSInteger(NSInteger a, NSInteger b) {
+    JSValue *resultValue = [value callWithArguments:[JSContext currentArguments]];
+    return resultValue.toInt32 * 10;
+};
+</code></pre>
+<p>再次调用js</p>
+<pre><code class="javascript">console.log(testAddMethod(1, 5));   //output  60，该方法变为了(a + b) * 10
+</code></pre>
+<p>上面的方法，都是同步函数，如果我想实现JS调用OC的方法，并且异步接收回调，那么该怎么做呢？比如h5中有一个分享按钮，用户点击之后，调用native分享（微信分享、微博分享等），在native分享成功或者失败时，回调h5页面，告诉其分享结果，h5页面刷新对应的UI，显示分享成功或者失败。</p>
+<p>这个问题，需要对js有一定了解。下面上js代码。</p>
+<pre><code class="javascript">//声明
+function share(shareData) {
+    var title = shareData.title;
+    var imgUrl = shareData.imgUrl;
+    var link = shareData.link;
+    var result = shareData.result;
+    //do something
+    //这里模拟异步操作
+    setTimeout(function(){
+       //2s之后，回调true分享成功
+       result(true);
+    }, 2000);
+}
+
+//调用的时候需要这么写
+share({
+    title: "title", 
+    imgUrl: "http://img.dd.com/xxx.png", 
+    link: location.href, 
+    result: function(res) { //函数作为参数
+         console.log(res ? "success" : "failure");
+    }
+});
+</code></pre>
+<p>从封装的角度上讲，js的<code>share</code>方法的参数是一个<code>对象</code>，该对象包含了几个必要的字段，以及一个回调函数，这个回调函数有点像oc的<code>block</code>，<strong>调用者</strong>把一个<code>function</code>传入一个<code>function</code>当作参数，在适当时候，方法内<strong>实现者</strong>调用该<code>function</code>，实现对<strong>调用者</strong>的异步回调。那么如果此时OC来实现<code>share</code>方法，该怎么做呢？其实大概是这样的：</p>
+<pre><code class="objective-c">//异步回调
+self.jsContext[@"share"] = ^(JSValue *shareData) {  //首先这里要注意，回调的参数不能直接写NSDictionary类型，为何呢？
+    //仔细看，打印出的确实是一个NSDictionary，但是result字段对应的不是block而是一个NSDictionary  
+    NSLog(@"%@", [shareData toObject]);     
+    //获取shareData对象的result属性，这个JSValue对应的其实是一个javascript的function。
+    JSValue *resultFunction = [shareData valueForProperty:@"result"];
+    //回调block，将js的function转换为OC的block
+    void (^result)(BOOL) = ^(BOOL isSuccess) {
+        [resultFunction callWithArguments:@[@(isSuccess)]];
+    };
+    //模拟异步回调
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"回调分享成功");
+        result(YES);
+    });
+};
+</code></pre>
+<p>其中一些坑，已经在代码的注释写的比较清楚了，这里要注意<code>JavaScript</code>的<code>function</code>和<code>Objective-C</code>的<code>block</code>的转换。</p>
+<p>从上面的一些探讨和尝试来看，足以证明<code>JavaScriptCore</code>的强大，这里不再展开，小伙伴们可以自行探索。</p>
+<h2>UIWebView的Cookie管理</h2>
+<h3>Cookie简介</h3>
+<p>说到<code>Cookie</code>，或许有些小伙伴会比较陌生，有些小伙伴会比较熟悉。如果项目中，所有页面都是纯原生来实现的话，一般<code>Cookie</code>这个东西或许我们永远也不会接触到。但是，这里还是要说一下<code>Cookie</code>，因为它真的很重要，由它产生的一些坑也很多。</p>
+<p><code>Cookie</code>在Web利用的最多的地方，是用来记录各种状态。比如你在<code>Safari</code>中打开百度，然后登陆自己的账号，之后打开所有百度相关的页面，都会是登陆状态，而且当你关了电脑，下次开机再次打开<code>Safari</code>打开百度，会发现还是登陆状态，其实这个就利用了<code>Cookie</code>。<code>Cookie</code>中记录了你百度账号的一些信息、有效期等，也维持了跨域请求时登录状态的统计性。</p><div class="image-package">
+<div class="image-container" style="max-width: 700px; max-height: 240px;">
+<div class="image-container-fill" style="padding-bottom: 34.38%;"></div>
+<div class="image-view" data-width="2048" data-height="704"><img data-original-src="//upload-images.jianshu.io/upload_images/5912049-1f0b0cbe9e15d6fd.jpg" data-original-width="2048" data-original-height="704" data-original-format="image/jpeg" data-original-filesize="282349"></div>
+</div>
+<div class="image-caption"></div>
+</div>可以看到<code>Cookie</code>的域各不相同，有效期也各不相同，一般<code>.baidu.com</code>这样的域的<code>Cookie</code>就是为了跨域时，可以维持一些状态。<p></p>
+<p>那么在App中，Cookie最常用的就是维持登录状态了。一般Native端都有自己的一套完整登录注册逻辑，一般大部分页面都是原生实现的。当然，也会有一些页面是h5来实现的，虽然h5页面在App中通过<code>WebView</code>加载或多或少都会有点性能问题，感觉不流畅或者体验不好，但是它的灵活性是Native App无法比拟的。那么由此，便产生了一种需求，当Native端用户是登录状态的，打开一个h5页面，h5也要维持用户的登录状态。</p>
+<p>这个需求看似简单，如何实现呢？一般的解决方案是Native保存登录状态的Cookie，在打开h5页面中，把Cookie添加上，以此来维持登录状态。其实坑还是有很多的，比如用户登录或者退出了，h5页面的登录状态也变了，需要刷新，什么时候刷新？<code>WKWebView</code>中<code>Cookie</code>丢失问题？这里简单说下<code>UIWebView</code>的<code>Cookie</code>管理，后面的章节再介绍<code>WKWebView</code>。</p>
+<h3>Cookie管理</h3>
+<p><code>UIWebView</code>的<code>Cookie</code>管理很简单，一般不需要我们手动操作<code>Cookie</code>，因为所有<code>Cookie</code>都会被<code>[NSHTTPCookieStorage sharedHTTPCookieStorage]</code>这个单例管理，而且<code>UIWebView</code>会自动同步<code>CookieStorage</code>中的Cookie，所以只要我们在Native端，正常登陆退出，h5在适当时候刷新，就可以正确的维持登录状态，不需要做多余的操作。</p>
+<p>可能有一些情况下，我们需要在访问某个链接时，添加一个固定<code>Cookie</code>用来做区分，那么就可以通过<code>header</code>来实现</p>
+<pre><code class="objective-c">NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]];
+[request addValue:@"customCookieName=1314521;" forHTTPHeaderField:@"Set-Cookie"];
+[self.webView loadRequest:request];
+</code></pre>
+<p>也可以主动操作<code>NSHTTPCookieStorage</code>，添加一个自定义<code>Cookie</code></p>
+<pre><code class="objective-c">NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:@{
+    NSHTTPCookieName: @"customCookieName", 
+    NSHTTPCookieValue: @"1314521", 
+    NSHTTPCookieDomain: @".baidu.com",
+    NSHTTPCookiePath: @"/"
+}];
+[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];   //Cookie存在则覆盖，不存在添加
+</code></pre>
+<p>还有一些常用的方法，如读取所有<code>Cookie</code></p>
+<pre><code class="objective-c">NSArray *cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies;
+</code></pre>
+<p><code>Cookie</code>转换成<code>HTTPHeaderFields</code>，并添加到<code>request</code>的<code>header</code>中</p>
+<pre><code class="objective-c">//Cookies数组转换为requestHeaderFields
+NSDictionary *requestHeaderFields = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+//设置请求头
+request.allHTTPHeaderFields = requestHeaderFields;
+</code></pre>
+<p>整体来说<code>UIWebView</code>的<code>Cookie</code>管理比较简单，小伙伴们可以自己写个demo测试一下，发挥你们的想象。</p>
+<h1>未完待续</h1>
+<p>关于<code>UIWebView</code>的介绍，以及使用<code>UIWebView</code>进行JS与OC的交互，<code>Cookie</code>的管理，就先简单介绍到这里。如果有小伙伴对于<a href="https://link.jianshu.com?t=https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="nofollow">WebViewJavascriptBridge</a>比较感兴趣，可以留言，根据留言我考虑一下写一篇文章，分析它的详细实现。</p>
+<p>另外，后续将为您介绍<code>WKWebView</code>的用法，一些OC与JS交互，Cookie管理、如何在<code>Safari</code>中调试以及一些不为人知的坑等，敬请期待~</p>
+<p>后续文章已发布：<br>
+<a href="https://www.jianshu.com/p/870dba42ec15" target="_blank">iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管理看我就够（中）</a></p>
+
+          </div>
+        </div>
+    </div>
+
+    <!-- 如果是付费文章，未购买，则显示购买按钮 -->
+
+    <!-- 连载目录项 -->
+
+    <!-- 如果是付费文章 -->
+      <!-- 如果是付费连载，已购买，且作者允许赞赏，则显示付费信息和赞赏 -->
+        <div data-vcomp="free-reward-panel"></div>
+
+      <div class="show-foot">
+        <a class="notebook" href="/nb/12300001">
+          <i class="iconfont ic-search-notebook"></i>
+          <span>iOS技术分享</span>
+</a>        <div class="copyright" data-toggle="tooltip" data-html="true" data-original-title="转载请联系作者获得授权，并标注“简书作者”。">
+          © 著作权归作者所有
+        </div>
+        <div class="modal-wrap" data-report-note>
+          <a id="report-modal">举报文章</a>
+        </div>
+      </div>
+
+      <!-- 文章底部作者信息 -->
+        <div class="follow-detail">
+          <div class="info">
+            <a class="avatar" href="/u/9f088cde1295">
+              <img src="//upload.jianshu.io/users/upload_avatars/5912049/be00e47e-4acd-4837-8a29-df3fa3cf7ca7?imageMogr2/auto-orient/strip|imageView2/1/w/96/h/96" alt="96" />
+</a>            <div props-data-classes="user-follow-button-footer" data-author-follow-button></div>
+            <a class="title" href="/u/9f088cde1295">Dark_Angel</a>
+              <i class="iconfont ic-man"></i>
+          </div>
+            <div class="signature">彼时斜光黯去，花落如雨。</div>
+        </div>
+
+    <div class="meta-bottom">
+      <div class="btn like-group"></div>
+      <div class="share-group">
+        <a class="share-circle" data-action="weixin-share" data-toggle="tooltip" data-original-title="分享到微信">
+          <i class="iconfont ic-wechat"></i>
+        </a>
+        <a class="share-circle" data-action="weibo-share" data-toggle="tooltip" href="javascript:void((function(s,d,e,r,l,p,t,z,c){var%20f=&#39;http://v.t.sina.com.cn/share/share.php?appkey=1881139527&#39;,u=z||d.location,p=[&#39;&amp;url=&#39;,e(u),&#39;&amp;title=&#39;,e(t||d.title),&#39;&amp;source=&#39;,e(r),&#39;&amp;sourceUrl=&#39;,e(l),&#39;&amp;content=&#39;,c||&#39;gb2312&#39;,&#39;&amp;pic=&#39;,e(p||&#39;&#39;)].join(&#39;&#39;);function%20a(){if(!window.open([f,p].join(&#39;&#39;),&#39;mb&#39;,[&#39;toolbar=0,status=0,resizable=1,width=440,height=430,left=&#39;,(s.width-440)/2,&#39;,top=&#39;,(s.height-430)/2].join(&#39;&#39;)))u.href=[f,p].join(&#39;&#39;);};if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else%20a();})(screen,document,encodeURIComponent,&#39;&#39;,&#39;&#39;,&#39;&#39;, &#39;推荐 @暗之天使_DEVIL 的文章《iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管理看我就够（上）》（ 分享自 @简书 ）&#39;,&#39;https://www.jianshu.com/p/ac45d99cf912?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=weibo&#39;,&#39;页面编码gb2312|utf-8默认gb2312&#39;));" data-original-title="分享到微博">
+          <i class="iconfont ic-weibo"></i>
+        </a>
+        <a class="share-circle" data-toggle="tooltip"  id="longshare" target="_blank">
+            <div class="qrcode" id="qrcode">
+             <img src="//cdn2.jianshu.io/assets/web/download-index-side-qrcode-cb13fc9106a478795f8d10f9f632fccf.png" alt="Download index side qrcode" />
+             <p>下载app生成长微博图片</p>
+             </div>
+          <i class="iconfont ic-picture"></i>
+        </a>
+        <a class="share-circle more-share" tabindex="0" data-toggle="popover" data-placement="top" data-html="true" data-trigger="focus" href="javascript:void(0);" data-content='
+          <ul class="share-list">
+            <li><a href="javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=&#39;+e(&#39;https://www.jianshu.com/p/ac45d99cf912?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=qzone&#39;)+&#39;&amp;title=&#39;+e(&#39;推荐 Dark_Angel 的文章《iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管理看我就够（上）》&#39;),x=function(){if(!window.open(r,&#39;qzone&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=600,height=600&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();"><i class="social-icon-sprite social-icon-zone"></i><span>分享到QQ空间</span></a></li>
+            <li><a href="javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://twitter.com/share?url=&#39;+e(&#39;https://www.jianshu.com/p/ac45d99cf912?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=twitter&#39;)+&#39;&amp;text=&#39;+e(&#39;推荐 Dark_Angel 的文章《iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管理看我就够（上）》（ 分享自 @jianshucom ）&#39;)+&#39;&amp;related=&#39;+e(&#39;jianshucom&#39;),x=function(){if(!window.open(r,&#39;twitter&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=600,height=600&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();"><i class="social-icon-sprite social-icon-twitter"></i><span>分享到Twitter</span></a></li>
+            <li><a href="javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://www.facebook.com/dialog/share?app_id=483126645039390&amp;display=popup&amp;href=https://www.jianshu.com/p/ac45d99cf912?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=facebook&#39;,x=function(){if(!window.open(r,&#39;facebook&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();"><i class="social-icon-sprite social-icon-facebook"></i><span>分享到Facebook</span></a></li>
+            <li><a href="javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://plus.google.com/share?url=&#39;+e(&#39;https://www.jianshu.com/p/ac45d99cf912?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=google_plus&#39;),x=function(){if(!window.open(r,&#39;google_plus&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();"><i class="social-icon-sprite social-icon-google"></i><span>分享到Google+</span></a></li>
+            <li><a href="javascript:void(function(){var d=document,e=encodeURIComponent,s1=window.getSelection,s2=d.getSelection,s3=d.selection,s=s1?s1():s2?s2():s3?s3.createRange().text:&#39;&#39;,r=&#39;http://www.douban.com/recommend/?url=&#39;+e(&#39;https://www.jianshu.com/p/ac45d99cf912?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=douban&#39;)+&#39;&amp;title=&#39;+e(&#39;iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管理看我就够（上）&#39;)+&#39;&amp;sel=&#39;+e(s)+&#39;&amp;v=1&#39;,x=function(){if(!window.open(r,&#39;douban&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r+&#39;&amp;r=1&#39;};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})()"><i class="social-icon-sprite social-icon-douban"></i><span>分享到豆瓣</span></a></li>
+          </ul>
+        '>更多分享</a>
+      </div>
+    </div>
+      <a id="web-note-ad-1" target="_blank" href="/apps/redirect?utm_source=note-bottom-click"><img src="//cdn2.jianshu.io/assets/web/web-note-ad-1-c2e1746859dbf03abe49248893c9bea4.png" alt="Web note ad 1" /></a>
+    <!--
+    <div id="note-comment-above-ad-container">
+      <span id="youdao-comment-ad" class="ad-badge">广告</span>
+    </div>
+    -->
+    <div id="vue_comment"></div>
+  </div>
+
+  <div class="vue-side-tool" props-data-props-show-qr-code="0"></div>
+</div>
+<div class="note-bottom">
+  <div class="js-included-collections"></div>
+  <div data-vcomp="recommended-notes" data-lazy="1.5" data-note-id="12223730"></div>
+  <!-- 相关文章 -->
+  <div class="seo-recommended-notes">
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="/p/870dba42ec15?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="//upload-images.jianshu.io/upload_images/5912049-acb907ba115ed980.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/300/h/240" alt="240" />
+</a>          <a class="title" target="_blank" href="/p/870dba42ec15?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管...</a>
+          <p class="description">前言 关于UIWebView的介绍，相信看过上文的小伙伴们，已经大概清楚了吧，如果有问题，欢迎提问。 本文是本系列文章的第二篇，主要为小伙伴们分享下WKWebView相关的内容： iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管...</p>
+          <a class="author" target="_blank" href="/u/9f088cde1295?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="//upload.jianshu.io/users/upload_avatars/5912049/be00e47e-4acd-4837-8a29-df3fa3cf7ca7?imageMogr2/auto-orient/strip|imageView2/1/w/48/h/48" alt="48" />
+            </div>
+            <span class="name">Dark_Angel</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="/p/52668d5b2e68?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="//upload-images.jianshu.io/upload_images/5912049-f937601d1e5ac061.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/300/h/240" alt="240" />
+</a>          <a class="title" target="_blank" href="/p/52668d5b2e68?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管...</a>
+          <p class="description">前言 在前面的文章中，我们介绍了UIWebView、WKWebView一些使用，与JS的交互和一些坑，相信看过的小伙伴们，已经大概清楚了吧，如果有问题，欢迎提问。 本文是本系列文章的最后一篇，主要为小伙伴们分享下Safari调试、与前端的配合以及实际应用中一些需求的实现等：...</p>
+          <a class="author" target="_blank" href="/u/9f088cde1295?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="//upload.jianshu.io/users/upload_avatars/5912049/be00e47e-4acd-4837-8a29-df3fa3cf7ca7?imageMogr2/auto-orient/strip|imageView2/1/w/48/h/48" alt="48" />
+            </div>
+            <span class="name">Dark_Angel</span>
+</a>        </div>
+
+        <div class="note ">
+                    <a class="title" target="_blank" href="/p/cbcc755336aa?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">iOS中UIWebview、JavaScript与OC交互、Cookie管理</a>
+          <p class="description">注,本文转载自：http://www.cocoachina.com/ios/20170612/19485.html WebView 创建与用法 UIWebViewDelegate UIWebView OC调用JS stringByEvaluatingJavaScriptFr...</p>
+          <a class="author" target="_blank" href="/u/cbafc0a32c51?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="//upload.jianshu.io/users/upload_avatars/7171587/0b1e7640-870e-4470-9ea6-2befcac160cf?imageMogr2/auto-orient/strip|imageView2/1/w/48/h/48" alt="48" />
+            </div>
+            <span class="name">天马行猿</span>
+</a>        </div>
+
+        <div class="note ">
+                    <a class="title" target="_blank" href="/p/c8af634c583b?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">OC--UIWebView的JS与OC交互、Cookie管理</a>
+          <p class="description">完全抄录：iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管理看我就够（上） UIWebView OC调用JS 1、stringByEvaluatingJavaScriptFromString JavaScriptCore（iOS...</p>
+          <a class="author" target="_blank" href="/u/431391b779b9?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="//upload.jianshu.io/users/upload_avatars/2040445/f4d04a4a-9cfd-42fd-82a1-fe568d6501df.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/48/h/48" alt="48" />
+            </div>
+            <span class="name">啊哈呵</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="/p/21f4b9020d18?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="//upload-images.jianshu.io/upload_images/5912049-2d84c08291858abe.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/300/h/240" alt="240" />
+</a>          <a class="title" target="_blank" href="/p/21f4b9020d18?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">（转）WKWebview 处理</a>
+          <p class="description">前言 关于UIWebView的介绍，相信看过上文的小伙伴们，已经大概清楚了吧，如果有问题，欢迎提问。 本文是本系列文章的第二篇，主要为小伙伴们分享下WKWebView相关的内容： iOS中UIWebView与WKWebView、JavaScript与OC交互、Cookie管...</p>
+          <a class="author" target="_blank" href="/u/fce901c26622?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="//upload.jianshu.io/users/upload_avatars/1434111/abaa83b51f05.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/48/h/48" alt="48" />
+            </div>
+            <span class="name">CoderLF</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="/p/43c17aa30179?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="//upload-images.jianshu.io/upload_images/2763709-231ff84dc63f94fc.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/300/h/240" alt="240" />
+</a>          <a class="title" target="_blank" href="/p/43c17aa30179?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">你有没有怀疑过，是自己不够好</a>
+          <p class="description">十月下旬，我陷入瓶颈期，公号涨粉缓慢，阅读量维持在平均线。 经常熬夜， 这四个月写的文章，比我四年写的稿子都多。以前写杂志约稿会找各种拖稿理由，现在变得那么认真，自己都没想到。 只是，没有大V转载，没有互推基友，缺少粉丝转发，后台停滞的数据让我很焦虑。这种焦虑就像当初刚开公...</p>
+          <a class="author" target="_blank" href="/u/78c8397fd78c?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="//upload.jianshu.io/users/upload_avatars/2763709/f90166f79c73.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/48/h/48" alt="48" />
+            </div>
+            <span class="name">饭叨C</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="/p/cc133dd9ba5a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="//upload-images.jianshu.io/upload_images/1367228-3e2c81ed7f057cb2.png?imageMogr2/auto-orient/strip|imageView2/1/w/300/h/240" alt="240" />
+</a>          <a class="title" target="_blank" href="/p/cc133dd9ba5a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">win10下MarkdownPad2预览无法显示的解决</a>
+          <p class="description">在win7系统下,这个是写Markdown格式文档的利器，因为其的实时预览模式，实在是太强悍了。 但是最近升级到了Win10，打开MarkdownPad2后，实时预览功能居然失效了，提示如图: 在http://markdownpad.com/faq.html#livepre...</p>
+          <a class="author" target="_blank" href="/u/c7087b84cda5?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="//upload.jianshu.io/users/upload_avatars/1367228/f99b9ec2ecb6?imageMogr2/auto-orient/strip|imageView2/1/w/48/h/48" alt="48" />
+            </div>
+            <span class="name">Believe_you</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="/p/d1c62e5a3d71?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="//upload-images.jianshu.io/upload_images/4471864-48cecd4656228c69?imageMogr2/auto-orient/strip|imageView2/1/w/300/h/240" alt="240" />
+</a>          <a class="title" target="_blank" href="/p/d1c62e5a3d71?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">论语漫读：虽曰未学，吾必谓之学矣—价值传承的途径</a>
+          <p class="description">论语漫读：虽曰未学，吾必谓之学矣—价值传承的途径 江上小堂 子夏曰：“贤贤易色，事父母能竭其力，事君能致其身，与朋友交言而有信。虽曰未学，吾必谓之学矣”。 对“贤贤易色”有很多不同的解释，就不列举了。我以为，“贤贤”之意就是像贤人那样行贤事。“贤”，有德之行。前一个“贤”是...</p>
+          <a class="author" target="_blank" href="/u/b785d97fb851?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="//upload.jianshu.io/users/upload_avatars/4471864/3833021c-27f3-415a-ae85-f49b1d97aef8.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/48/h/48" alt="48" />
+            </div>
+            <span class="name">江上小堂</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="/p/2f530f094004?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="//upload-images.jianshu.io/upload_images/5884910-d2dbeef842fab130.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/300/h/240" alt="240" />
+</a>          <a class="title" target="_blank" href="/p/2f530f094004?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">2017年8月30日长春籍游客赵利春厦门旅游惊悚遭遇</a>
+          <p class="description">我是赵利春，吉林省长春市人，电话13252642765。    因为我和姐姐想到风景秀丽气候宜人的厦门旅游，姐姐就在长春市火车站提前购买了z102长春到厦门的全价卧铺火车票575元×2人计1150元，因z102到厦门的卧铺车票特别不好买，提前10天却只能买2017年8月30...</p>
+          <a class="author" target="_blank" href="/u/d00b9804ba3a?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="//upload.jianshu.io/users/upload_avatars/5884910/5bc58470-51fc-4169-aca2-18e888ed0828?imageMogr2/auto-orient/strip|imageView2/1/w/48/h/48" alt="48" />
+            </div>
+            <span class="name">新军阀摧残被其致残致病轮椅女</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="/p/f1f4f07591d9?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="//upload-images.jianshu.io/upload_images/1702801-3e204a8a4b9c80d0.jpeg?imageMogr2/auto-orient/strip|imageView2/1/w/300/h/240" alt="240" />
+</a>          <a class="title" target="_blank" href="/p/f1f4f07591d9?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">像小妈一样不愿面对的伤害</a>
+          <p class="description">   总有那么几天都觉得被小妈监视，走在路上，书店里，房间中，时不时的眼神交火，我尽了她略有保留，我狂躁了，咆哮着冲她大笑，她也笑了……我们互相试探着双方的底线，到最后谁能把谁逼疯，我用折磨着自己的方式折磨着她，直到肉血模糊，我以为我胜了，因为这是我唯一的武器。    直到...</p>
+          <a class="author" target="_blank" href="/u/7aa208254c7a?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="//cdn2.jianshu.io/assets/default_avatar/7-0993d41a595d6ab6ef17b19496eb2f21.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/48/h/48" alt="48" />
+            </div>
+            <span class="name">新子粒</span>
+</a>        </div>
+  </div>
+</div>
+
+    <script type="application/json" data-name="page-data">{"user_signed_in":false,"locale":"zh-CN","os":"other","read_mode":"day","read_font":"font2","note_show":{"is_author":false,"is_following_author":false,"is_liked_note":false,"follow_state":0,"uuid":"a1e52893-18bc-4a1e-8045-a03bd7decf58"},"note":{"id":12223730,"slug":"ac45d99cf912","user_id":5912049,"notebook_id":12300001,"commentable":true,"likes_count":228,"views_count":10326,"public_wordage":3293,"comments_count":34,"featured_comments_count":0,"total_rewards_count":1,"is_author":false,"paid_type":"free","paid":false,"paid_content_accessible":false,"author":{"nickname":"Dark_Angel","total_wordage":19187,"followers_count":501,"total_likes_count":711}}}</script>
+    
+    <script src="//cdn2.jianshu.io/assets/babel-polyfill-d171e3dec4b6c15634dd.js" crossorigin="anonymous"></script>
+    <script src="//cdn2.jianshu.io/assets/web-base-e4495bc9b53ed4dc88c7.js" crossorigin="anonymous"></script>
+<script src="//cdn2.jianshu.io/assets/web-2664ea3a9fc3c69b3841.js" crossorigin="anonymous"></script>
+    
+    <script src="//cdn2.jianshu.io/assets/web/pages/notes/show/entry-f49e784003572ed97c8e.js" crossorigin="anonymous"></script>
+    <script>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+  </body>
+</html>
